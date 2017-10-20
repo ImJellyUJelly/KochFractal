@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/KochFractal.iml" filepath="$PROJECT_DIR$/KochFractal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/KochFractal.iml" filepath="$PROJECT_DIR$/.idea/KochFractal.iml" />
     </modules>
   </component>
 </project>

@@ -41,7 +41,6 @@ public class JSF31KochFractalFX extends Application {
     // Koch manager
     // TO DO: Create class KochManager in package calculate
     private KochManager kochManager;
-    private KochFractal kochFractal;
     
     // Current level of Koch fractal
     private int currentLevel = 1;
@@ -161,7 +160,6 @@ public class JSF31KochFractalFX extends Application {
         
         // Create Koch manager and set initial level
         resetZoom();
-        kochFractal = new KochFractal();
         kochManager = new KochManager(this);
         kochManager.changeLevel(currentLevel);
 
