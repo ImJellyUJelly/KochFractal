@@ -33,10 +33,12 @@ public class KochManager implements Observer {
         koch.generateRightEdge();
         ts.setEnd("end drawing");
         application.setTextDraw(ts.toString());
+        application.setTextNrEdges(String.valueOf(edges.size()));
     }
 
     @Override
     public void update(Observable o, Object arg) {
         application.drawEdge((Edge)arg);
+        edges.add((Edge)arg);
     }
 }
