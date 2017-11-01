@@ -1,6 +1,7 @@
 package calculate;
 
 import jsf31kochfractalfx.JSF31KochFractalFX;
+import timeutil.TimeStamp;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -25,9 +26,13 @@ public class KochManager implements Observer {
 
     public void drawEdges() {
         application.clearKochPanel();
+        TimeStamp ts = new TimeStamp();
+        ts.setBegin("start drawing");
         koch.generateLeftEdge();
         koch.generateBottomEdge();
         koch.generateRightEdge();
+        ts.setEnd("end drawing");
+        application.setTextDraw(ts.toString());
     }
 
     @Override
