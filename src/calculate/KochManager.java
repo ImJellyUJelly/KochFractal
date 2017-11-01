@@ -14,6 +14,8 @@ public class KochManager implements Observer {
 
     public KochManager(JSF31KochFractalFX app) {
         application = app;
+        koch = new KochFractal();
+        koch.addObserver(this);
     }
 
     public void changeLevel(int level) {
