@@ -26,6 +26,7 @@ public class KochManager implements Observer {
 
     public void drawEdges() {
         application.clearKochPanel();
+        edges.clear();
         TimeStamp ts = new TimeStamp();
         ts.setBegin("start drawing");
         koch.generateLeftEdge();
