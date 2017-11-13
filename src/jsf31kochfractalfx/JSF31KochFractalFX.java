@@ -248,7 +248,7 @@ public class JSF31KochFractalFX extends Application {
 
     private void fitFractalButtonActionPerformed(ActionEvent event) {
         resetZoom();
-        kochManager.drawEdges();
+        //kochManager.drawEdges();
     }
     
     private void kochPanelMouseClicked(MouseEvent event) {
@@ -272,7 +272,7 @@ public class JSF31KochFractalFX extends Application {
         zoomTranslateY = zoomTranslateY + event.getY() - lastDragY;
         lastDragX = event.getX();
         lastDragY = event.getY();
-        kochManager.drawEdges();
+        //kochManager.drawEdges();
     }
 
     private void kochPanelMousePressed(MouseEvent event) {
