@@ -7,45 +7,51 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.*;
 
 public class KochManager {
-    private List<Edge> edges;
+    private ArrayList<Edge> edges;
     private JSF31KochFractalFX application;
-    //private KochFractal koch;
     private int count = 0;
+    ExecutorService pool;
 
     public KochManager(JSF31KochFractalFX app) {
         application = app;
-        //koch = new KochFractal();
-        //koch.addObserver(this);
         edges = new ArrayList<>();
+        pool = Executors.newFixedThreadPool(3);
     }
 
     public void changeLevel(int nxt) {
-        //koch.setLevel(nxt);
         edges.clear();
-
-//        koch.generateLeftEdge();
-//        koch.generateBottomEdge();
-//        koch.generateRightEdge();
-
-        // Runnables worden aangemaakt en meegegeven aan de verschillende threads
-        KochRunnable leftRunnable = new KochRunnable(this, nxt, "Left");
-        Thread leftThread = new Thread(leftRunnable);
-        KochRunnable rightRunnable = new KochRunnable(this, nxt, "Right");
-        Thread rightThread = new Thread(rightRunnable);
-        KochRunnable bottomRunnable = new KochRunnable(this, nxt, "Bottom");
-        Thread bottomThread = new Thread(bottomRunnable);
 
         // Calculating calculationtime
         TimeStamp measureCalc = new TimeStamp();
         measureCalc.setBegin("start calculating");
 
-        leftThread.start();
-        rightThread.start();
-        bottomThread.start();
+        // Runnables worden aangemaakt en meegegeven aan de verschillende threads
+        KochCallable leftCallable = new KochCallable(nxt,"Left");
+        KochCallable rightCallable = new KochCallable(nxt, "Right");
+        KochCallable bottomCallable = new KochCallable(nxt, "Bottom");
+
+        Future<ArrayList<Edge>> leftFuture = pool.submit(leftCallable);
+        Future<ArrayList<Edge>> rightFuture = pool.submit(rightCallable);
+        Future<ArrayList<Edge>> bottomFuture = pool.submit(bottomCallable);
+
+        try{
+            edges.addAll(leftFuture.get());
+            edges.addAll(rightFuture.get());
+            edges.addAll(bottomFuture.get());
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
         measureCalc.setEnd("end calculating");
+
+        application.requestDrawEdges();
 
         // Display on GUI
         application.setTextCalc(measureCalc.toString());
@@ -63,7 +69,7 @@ public class KochManager {
         measureDrawing.setEnd("end drawing");
 
         // Display on GUI
-        //application.setTextNrEdges(String.valueOf(koch.getNrOfEdges()));
+        application.setTextNrEdges(String.valueOf(edges.size()));
         application.setTextDraw(measureDrawing.toString());
     }
 
@@ -78,12 +84,4 @@ public class KochManager {
             count = 0;
         }
     }
-
-//    @Override
-//    public void update(Observable o, Object arg) {
-//        Edge edge = (Edge) arg;
-//        synchronized (this) {
-//            edges.add(edge);
-//        }
-//    }
 }
