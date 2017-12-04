@@ -19,23 +19,11 @@ public class KochCallable implements Callable<ArrayList<Edge>>, Observer {
         fractal.addObserver(this);
         fractal.setLevel(nxt);
         edges = new ArrayList<>();
-        edgeDirection = edge;
     }
 
     @Override
     public ArrayList<Edge> call() throws Exception {
-        switch(edgeDirection){
-            case LEFT:
-                fractal.generateLeftEdge();
-                break;
-            case RIGHT:
-                fractal.generateRightEdge();
-                break;
-            case BOTTOM:
-                fractal.generateBottomEdge();
-                break;
-        }
-        return edges;
+        return null;
     }
 
     @Override

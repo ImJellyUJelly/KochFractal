@@ -178,16 +178,16 @@ public class JSF31KochFractalFX extends Application {
         gc.fillRect(0.0,0.0,kpWidth,kpHeight);
     }
     
-    public void drawEdge(Edge e) {
+    public void drawEdge(Edge e, Color color) {
         // Graphics
         GraphicsContext gc = kochPanel.getGraphicsContext2D();
-        
+
         // Adjust edge for zoom and drag
         Edge e1 = edgeAfterZoomAndDrag(e);
-        
+
         // Set line color
-        gc.setStroke(e1.color);
-        
+        gc.setStroke(color);
+
         // Set line width depending on level
         if (currentLevel <= 3) {
             gc.setLineWidth(2.0);
@@ -198,7 +198,7 @@ public class JSF31KochFractalFX extends Application {
         else {
             gc.setLineWidth(1.0);
         }
-        
+
         // Draw line
         gc.strokeLine(e1.X1,e1.Y1,e1.X2,e1.Y2);
     }
@@ -225,12 +225,12 @@ public class JSF31KochFractalFX extends Application {
     }
     
     private void increaseLevelButtonActionPerformed(ActionEvent event) {
-        if (currentLevel < 12) {
-            // resetZoom();
-            currentLevel++;
-            labelLevel.setText("Level: " + currentLevel);
-            kochManager.changeLevel(currentLevel);
-        }
+
+        // resetZoom();
+        currentLevel++;
+        labelLevel.setText("Level: " + currentLevel);
+        kochManager.changeLevel(currentLevel);
+
     } 
     
     private void decreaseLevelButtonActionPerformed(ActionEvent event) {

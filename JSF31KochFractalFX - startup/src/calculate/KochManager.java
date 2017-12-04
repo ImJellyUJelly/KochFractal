@@ -1,5 +1,7 @@
 package calculate;
 
+import javafx.scene.paint.Color;
+import jdk.nashorn.internal.runtime.linker.JavaAdapterFactory;
 import jsf31kochfractalfx.JSF31KochFractalFX;
 import timeutil.TimeStamp;
 
@@ -13,7 +15,7 @@ public class KochManager {
     private ArrayList<Edge> edges;
     private JSF31KochFractalFX application;
     private int count = 0;
-    ExecutorService pool;
+    private ExecutorService pool;
 
     public KochManager(JSF31KochFractalFX app) {
         application = app;
@@ -28,32 +30,20 @@ public class KochManager {
         TimeStamp measureCalc = new TimeStamp();
         measureCalc.setBegin("start calculating");
 
-        // Runnables worden aangemaakt en meegegeven aan de verschillende threads
-        KochCallable leftCallable = new KochCallable(nxt,EdgeDirection.LEFT);
-        KochCallable rightCallable = new KochCallable(nxt, EdgeDirection.RIGHT);
-        KochCallable bottomCallable = new KochCallable(nxt, EdgeDirection.BOTTOM);
+        JavaFXTask leftTask = new JavaFXTask(this, nxt, EdgeDirection.LEFT, application);
+        JavaFXTask rightTask = new JavaFXTask(this, nxt, EdgeDirection.RIGHT, application);
+        JavaFXTask bottomTask = new JavaFXTask(this, nxt, EdgeDirection.BOTTOM, application);
 
-        Future<ArrayList<Edge>> leftFuture = pool.submit(leftCallable);
-        Future<ArrayList<Edge>> rightFuture = pool.submit(rightCallable);
-        Future<ArrayList<Edge>> bottomFuture = pool.submit(bottomCallable);
-
-        try{
-            edges.addAll(leftFuture.get());
-            edges.addAll(rightFuture.get());
-            edges.addAll(bottomFuture.get());
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+        pool.submit(leftTask);
+        pool.submit(rightTask);
+        pool.submit(bottomTask);
 
         measureCalc.setEnd("end calculating");
 
         application.requestDrawEdges();
 
         // Display on GUI
+        application.setTextNrEdges(String.valueOf(edges.size()));
         application.setTextCalc(measureCalc.toString());
     }
 
@@ -64,12 +54,11 @@ public class KochManager {
         TimeStamp measureDrawing = new TimeStamp();
         measureDrawing.setBegin("start drawing");
         for (Edge edge : edges) {
-            application.drawEdge(edge);
+            application.drawEdge(edge, edge.color);
         }
         measureDrawing.setEnd("end drawing");
 
         // Display on GUI
-        application.setTextNrEdges(String.valueOf(edges.size()));
         application.setTextDraw(measureDrawing.toString());
     }
 
