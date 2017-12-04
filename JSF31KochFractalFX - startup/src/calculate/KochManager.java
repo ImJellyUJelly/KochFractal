@@ -29,9 +29,9 @@ public class KochManager {
         measureCalc.setBegin("start calculating");
 
         // Runnables worden aangemaakt en meegegeven aan de verschillende threads
-        KochCallable leftCallable = new KochCallable(nxt,"Left");
-        KochCallable rightCallable = new KochCallable(nxt, "Right");
-        KochCallable bottomCallable = new KochCallable(nxt, "Bottom");
+        KochCallable leftCallable = new KochCallable(nxt,EdgeDirection.LEFT);
+        KochCallable rightCallable = new KochCallable(nxt, EdgeDirection.RIGHT);
+        KochCallable bottomCallable = new KochCallable(nxt, EdgeDirection.BOTTOM);
 
         Future<ArrayList<Edge>> leftFuture = pool.submit(leftCallable);
         Future<ArrayList<Edge>> rightFuture = pool.submit(rightCallable);

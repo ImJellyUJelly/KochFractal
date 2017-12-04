@@ -9,29 +9,29 @@ import java.util.Observer;
 public class KochRunnable implements Observer, Runnable {
     private KochManager manager;
     private KochFractal fractal;
-    private String edge;
+    private EdgeDirection edgeDirection;
 
-    public KochRunnable(KochManager manager, int nxt, String edge){
+    public KochRunnable(KochManager manager, int nxt, EdgeDirection edge){
         this.manager = manager;
         fractal = new KochFractal();
         fractal.addObserver(this);
         fractal.setLevel(nxt);
-        this.edge = edge;
+        edgeDirection = edge;
     }
 
 
     @Override
     public void run() {
-        switch(this.edge){
-            case "Left":
+        switch(edgeDirection){
+            case LEFT:
                 fractal.generateLeftEdge();
                 manager.plusCount();
                 break;
-            case "Right":
+            case RIGHT:
                 fractal.generateRightEdge();
                 manager.plusCount();
                 break;
-            case "Bottom":
+            case BOTTOM:
                 fractal.generateBottomEdge();
                 manager.plusCount();
                 break;

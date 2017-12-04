@@ -12,26 +12,26 @@ import java.util.concurrent.Callable;
 public class KochCallable implements Callable<ArrayList<Edge>>, Observer {
     private KochFractal fractal;
     private ArrayList<Edge> edges;
-    private String edge;
+    private EdgeDirection edgeDirection;
 
-    public KochCallable(int nxt, String edge){
+    public KochCallable(int nxt, EdgeDirection edge){
         fractal = new KochFractal();
         fractal.addObserver(this);
         fractal.setLevel(nxt);
         edges = new ArrayList<>();
-        this.edge = edge;
+        edgeDirection = edge;
     }
 
     @Override
     public ArrayList<Edge> call() throws Exception {
-        switch(this.edge){
-            case "Left":
+        switch(edgeDirection){
+            case LEFT:
                 fractal.generateLeftEdge();
                 break;
-            case "Right":
+            case RIGHT:
                 fractal.generateRightEdge();
                 break;
-            case "Bottom":
+            case BOTTOM:
                 fractal.generateBottomEdge();
                 break;
         }
