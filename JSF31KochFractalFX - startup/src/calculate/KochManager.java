@@ -1,14 +1,9 @@
 package calculate;
 
-import javafx.scene.paint.Color;
-import jdk.nashorn.internal.runtime.linker.JavaAdapterFactory;
 import jsf31kochfractalfx.JSF31KochFractalFX;
 import timeutil.TimeStamp;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.*;
 
 public class KochManager {
@@ -31,8 +26,11 @@ public class KochManager {
         measureCalc.setBegin("start calculating");
 
         JavaFXTask leftTask = new JavaFXTask(this, nxt, EdgeDirection.LEFT, application);
+        updateProgressBar(EdgeDirection.LEFT, leftTask);
         JavaFXTask rightTask = new JavaFXTask(this, nxt, EdgeDirection.RIGHT, application);
+        updateProgressBar(EdgeDirection.RIGHT, rightTask);
         JavaFXTask bottomTask = new JavaFXTask(this, nxt, EdgeDirection.BOTTOM, application);
+        updateProgressBar(EdgeDirection.BOTTOM, bottomTask);
 
         pool.submit(leftTask);
         pool.submit(rightTask);
@@ -62,15 +60,33 @@ public class KochManager {
         application.setTextDraw(measureDrawing.toString());
     }
 
-    public synchronized void addEdge(Edge edge){
+    public synchronized void addEdge(Edge edge) {
         this.edges.add(edge);
     }
 
-    public synchronized void plusCount(){
+    // Runnable method
+    public synchronized void plusCount() {
         count++;
-        if(count == 3) {
+        if (count == 3) {
             application.requestDrawEdges();
             count = 0;
         }
+    }
+
+    public void updateProgressBar(EdgeDirection direction, JavaFXTask task) {
+        switch (direction) {
+            case LEFT:
+                application.requestUpdateLeftProgressBar(task);
+                break;
+            case RIGHT:
+                application.requestUpdateRightProgressBar(task);
+                break;
+            case BOTTOM:
+                application.requestUpdateBottomProgressBar(task);
+        }
+    }
+
+    public ArrayList<Edge> getEdges() {
+        return edges;
     }
 }

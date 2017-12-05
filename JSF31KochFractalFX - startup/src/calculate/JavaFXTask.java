@@ -26,7 +26,7 @@ public class JavaFXTask extends Task<List<Edge>> implements Observer {
     private KochManager manager;
     private Random rnd = new Random();
 
-    public JavaFXTask(KochManager managerr, int nxt, EdgeDirection edge, JSF31KochFractalFX app) {
+    public JavaFXTask(KochManager manager, int nxt, EdgeDirection edge, JSF31KochFractalFX app) {
         this.app = app;
         this.manager = manager;
         fractal = new KochFractal();
@@ -40,20 +40,23 @@ public class JavaFXTask extends Task<List<Edge>> implements Observer {
     public void update(Observable o, Object arg) {
         Edge edge = (Edge) arg;
         edges.add(edge);
+        manager.addEdge(edge);
         Platform.runLater(
                 new Runnable() {
                     @Override
                     public void run() {
                         app.drawEdge(edge, Color.WHITE);
+                        updateProgress(edges.size(), fractal.getNrOfEdges() / 3);
+                        app.setTextNrEdges(String.valueOf(manager.getEdges().size()));
                     }
                 }
         );
-        updateProgress(edges.size(), fractal.getNrOfEdges() / 3);
         updateMessage(Integer.toString(edges.size()));
         try {
             Thread.sleep(2);
         } catch (InterruptedException ex) {
             Logger.getLogger(KochFractal.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.print(ex.getMessage());
         }
     }
 
@@ -71,5 +74,18 @@ public class JavaFXTask extends Task<List<Edge>> implements Observer {
                 break;
         }
         return edges;
+    }
+
+    @Override
+    protected void succeeded() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                app.clearKochPanel();
+                for(Edge e : manager.getEdges()) {
+                    app.drawEdge(e, e.color);
+                }
+            }
+        });
     }
 }
